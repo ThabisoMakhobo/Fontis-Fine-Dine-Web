@@ -17,10 +17,13 @@ CREATE TABLE IF NOT EXISTS products (
   name VARCHAR(100) NOT NULL,
   price INT(100) NOT NULL,
   image VARCHAR(100) NOT NULL,
+  description TEXT DEFAULT NULL,
+  category VARCHAR(100) DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
 -- CART TABLE
+-- Only logged-in users can have carts; guests cannot.
 CREATE TABLE IF NOT EXISTS cart (
   id INT(100) NOT NULL AUTO_INCREMENT,
   user_id INT(100) NOT NULL,
@@ -28,10 +31,12 @@ CREATE TABLE IF NOT EXISTS cart (
   price INT(100) NOT NULL,
   quantity INT(100) NOT NULL,
   image VARCHAR(100) NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- ORDERS TABLE
+-- Only registered users can place orders.
 CREATE TABLE IF NOT EXISTS orders (
   id INT(100) NOT NULL AUTO_INCREMENT,
   user_id INT(100) NOT NULL,
@@ -42,21 +47,26 @@ CREATE TABLE IF NOT EXISTS orders (
   total_price INT(100) NOT NULL,
   placed_on VARCHAR(50) NOT NULL,
   payment_status VARCHAR(20) NOT NULL DEFAULT 'pending',
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- MESSAGES TABLE
+-- Allow guests to send contact messages (user_id can be NULL)
 CREATE TABLE IF NOT EXISTS message (
   id INT(100) NOT NULL AUTO_INCREMENT,
-  user_id INT(100) NOT NULL,
+  user_id INT(100) NULL,
   name VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL,
   number VARCHAR(12) NOT NULL,
   message VARCHAR(500) NOT NULL,
-  PRIMARY KEY (id)
+  sent_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- INSERT DEFAULT ADMIN USER
 INSERT INTO users (name, email, password, user_type)
-VALUES ('Admin', 'admin@gmail.com', '$2y$10$h5tnY6JxuDN5kwInKr4i0erl7gI2BHvfCpnpYPZLxSw6xNir4u5Cy', 'admin');
+VALUES ('Admin', 'admin@gmail.com', '$2y$10$h5tnY6JxuDN5kwInKr4i0erl7gI2BHvfCpnpYPZLxSw6xNir4u5Cy', 'admin')
+ON DUPLICATE KEY UPDATE email = email;
 -- Password: adminpass
