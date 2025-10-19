@@ -53,22 +53,119 @@ if (isset($_POST['order_btn'])) {
             mysqli_query($conn, "DELETE FROM `cart` WHERE user_id = '$user_id'") or die('Cart cleanup failed');
 
             // Prepare WhatsApp message
-            $admin_phone = '27793761586'; // International format without +
-            $whatsapp_message = "New Order Received%0A" .
-                                "Name: " . urlencode($order_data['name']) . "%0A" .
-                                "Phone: " . urlencode($order_data['number']) . "%0A" .
-                                "Payment: " . urlencode($order_data['method']) . "%0A" .
-                                "Items: " . urlencode($order_data['total_products']) . "%0A" .
-                                "Total: R" . urlencode($order_data['total_price']) . "%0A" .
-                                "Date: " . urlencode($order_data['placed_on']);
+$admin_phone = '27793761586'; // International format without +
+$whatsapp_message = "New Order Received%0A" .
+                    "Name: " . urlencode($order_data['name']) . "%0A" .
+                    "Phone: " . urlencode($order_data['number']) . "%0A" .
+                    "Payment: " . urlencode($order_data['method']) . "%0A" .
+                    "Items: " . urlencode($order_data['total_products']) . "%0A" .
+                    "Total: R" . urlencode($order_data['total_price']) . "%0A" .
+                    "Date: " . urlencode($order_data['placed_on']);
 
-            $whatsapp_url = "https://wa.me/$admin_phone?text=$whatsapp_message";
+echo "<style>
+/* Simple modal styles */
+#orderModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+#orderModal {
+  background: #fff;
+  padding: 20px;
+  max-width: 420px;
+  width: 90%;
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+  font-family: Arial, sans-serif;
+}
+#orderModal h2 { margin: 0 0 8px 0; font-size: 18px; }
+#orderModal p { margin: 0 0 16px 0; color: #444; }
+.modalButtons { display:flex; gap:10px; justify-content:flex-end; }
+.btnPrimary, .btnSecondary {
+  padding: 8px 12px;
+  border-radius:6px;
+  border: none;
+  cursor: pointer;
+  font-size:14px;
+}
+.btnPrimary { background:#25D366; color:#fff; }     /* WhatsApp green */
+.btnSecondary { background:#eee; color:#222; }
+</style>
 
-            echo "<script>
-                alert('Order placed successfully! Redirecting to WhatsApp...');
-                window.open('$whatsapp_url', '_blank'); // Opens WhatsApp in new tab
-            </script>";
-            exit;
+<div id='orderModalOverlay' style='display:none;'>
+  <div id='orderModal' role='dialog' aria-modal='true' aria-labelledby='orderModalTitle'>
+    <h2 id='orderModalTitle'>Order placed successfully!</h2>
+    <p>Your order was recorded. Would you like to open WhatsApp to confirm the order with us?</p>
+    <div class='modalButtons'>
+      <button id='skipWhatsApp' class='btnSecondary'>Continue without WhatsApp</button>
+      <button id='openWhatsApp' class='btnPrimary'>Open WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Data from PHP
+  var admin_phone = '" . $admin_phone . "';
+  var whatsapp_message = '" . $whatsapp_message . "';
+
+  // Build correct WhatsApp URL
+  var isMobile = /iPhone|iPad|iPod|Android|Windows Phone|BlackBerry/i.test(navigator.userAgent);
+  var whatsappBase = isMobile ? 'https://wa.me/' : 'https://web.whatsapp.com/send?phone=';
+  var whatsappUrl = whatsappBase + admin_phone + '&text=' + whatsapp_message;
+
+  // Show the modal
+  var overlay = document.getElementById('orderModalOverlay');
+  var btnOpen = document.getElementById('openWhatsApp');
+  var btnSkip = document.getElementById('skipWhatsApp');
+
+  // Safety: small delay to ensure DOM ready & user sees page
+  overlay.style.display = 'flex';
+
+  // Handler: open WhatsApp in a new tab via a real user click
+  btnOpen.addEventListener('click', function(e) {
+    // Create an anchor and click it — this is a true user gesture and won't be blocked
+    var a = document.createElement('a');
+    a.href = whatsappUrl;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+
+    // programmatic click initiated inside a direct user click handler => allowed
+    a.click();
+
+    // cleanup anchor
+    document.body.removeChild(a);
+
+    // Optionally inform user if blocked (rare)
+    setTimeout(function() {
+      // If after opening WhatsApp the user is still on the page, go to home after a small delay
+      window.location.href = 'home.php';
+    }, 2500);
+  });
+
+  // Handler: skip WhatsApp, go back home
+  btnSkip.addEventListener('click', function() {
+    window.location.href = 'home.php';
+  });
+
+  // Optional: allow closing modal with Escape
+  document.addEventListener('keydown', function(evt) {
+    if (evt.key === 'Escape') {
+      window.location.href = 'home.php';
+    }
+  });
+})();
+</script>";
+
+
+exit;
+
         }
     }
 }
