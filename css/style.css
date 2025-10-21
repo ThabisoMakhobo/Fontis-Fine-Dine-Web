@@ -439,24 +439,40 @@ section {
 .about .flex .image img {
     width: 100%;
 }
-
 .about .flex .content {
     flex: 1 1 40rem;
     padding: 2rem;
     background-color: var(--light-bg);
+    border-radius: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
+/* Heading style */
 .about .flex .content h3 {
-    font-size: 3rem;
+    font-size: 2.8rem; /* from 10rem -> more readable */
     color: var(--dark-gray);
     text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
 }
 
+/* Paragraph text */
 .about .flex .content p {
-    padding: 1rem 0;
-    line-height: 2;
-    font-size: 1.7rem;
+    padding: 0.5rem 0;
+    line-height: 1.8;
+    font-size: 1.6rem; /* from 10rem -> suitable for paragraph */
     color: var(--light-gray);
+    text-align: justify;
+}
+
+/* Optional: make responsive on smaller screens */
+@media (max-width: 768px) {
+    .about .flex .content h3 {
+        font-size: 2.2rem;
+    }
+    .about .flex .content p {
+        font-size: 1.4rem;
+    }
 }
 
 .home-contact {
