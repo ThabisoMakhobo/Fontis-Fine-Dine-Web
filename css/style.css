@@ -439,6 +439,7 @@ section {
 .about .flex .image img {
     width: 100%;
 }
+
 .about .flex .content {
     flex: 1 1 40rem;
     padding: 2rem;
@@ -4285,3 +4286,4 @@ footer .end span{
     color: #139805;
     margin-left: 10px;
 }
+
