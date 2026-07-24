@@ -1,76 +1,345 @@
 # Fontis Fine Dine
 
-Fontis Fine Dine is a food ordering website built for a Work Integrated Learning (WIL) project by:
+Fontis Fine Dine is a food ordering website developed as part of our Work Integrated Learning (WIL) project for the Diploma in IT Software Development.
 
-- Shaun Makhobo
-- Kamogelo Seilane
-- Masoma Pauline
+The project was developed by:
 
-It lets customers browse a menu, add items to a cart, and place an order that gets confirmed directly with the restaurant over WhatsApp, while admin staff manage products, orders, users, and customer messages from a separate dashboard.
+* Shaun Makhobo
+* Kamogelo Seilane
+* Masoma Pauline
 
-## Why this stack
+The purpose of the system is to provide customers with an easy and convenient way to browse menu items, add products to their cart, and place orders online. Once an order has been placed, the system generates a WhatsApp order confirmation message that allows customers to communicate directly with the restaurant. The system also includes an administrative dashboard that enables administrators to manage products, customer orders, users, and contact messages.
 
-- **PHP + MySQL (procedural, mysqli).** Kept deliberately simple and framework-free so every team member could read, run, and debug the whole codebase without a build step — appropriate for a WIL project where the goal was demonstrating end-to-end understanding of a dynamic, database-backed website, not framework proficiency.
-- **Server-rendered pages, no JS framework.** Each page (`shop.php`, `cart.php`, `checkout.php`, etc.) is self-contained PHP that queries the database and renders HTML directly. This matches the course's teaching stack and avoids the deployment complexity of a JS build pipeline on free/shared hosting.
-- **InfinityFree hosting.** A free host was chosen because this is a student project without a hosting budget. It only requires plain PHP + MySQL support, which InfinityFree provides, and is realistic for showing the project live during evaluation.
+## Project Overview
 
-## Key design decisions
+Fontis Fine Dine was designed to digitise and simplify the restaurant ordering process. The website allows customers to:
 
-**Guest browsing, gated purchasing.**
-Visitors can explore the home page, shop, and about/contact pages without an account (`guest_home.php` sets a guest session flag). Adding to cart and checking out require login. This mirrors how most restaurant/e-commerce sites work: let people see the menu freely, but require an account to track orders.
+* Browse menu items as guests.
+* Register and log into their accounts.
+* Add products to their shopping cart.
+* Place food orders online.
+* View their order history.
+* Contact the restaurant through the contact page.
 
-**WhatsApp-based order confirmation instead of a payment gateway.**
-`checkout.php` records the order in the database, then opens a WhatsApp chat (`wa.me` / `web.whatsapp.com`) pre-filled with the order details so the customer can confirm directly with restaurant staff. This was chosen over integrating a payment gateway (PayFast, Stripe, etc.) because:
-- it needs no merchant account, transaction fees, or approval process — impractical for a short-lived student project;
-- it matches how small South African food vendors actually take orders (WhatsApp is the de facto ordering channel);
-- `payment_status` still exists on the `orders` table so an admin can mark orders as `completed` once payment is settled off-platform.
+Administrators are able to:
 
-**Passwords are hashed, never stored or compared in plain text.**
-`register.php` and `login.php` use PHP's `password_hash()` / `password_verify()` (bcrypt), and `login.php` uses a prepared statement for the credential lookup, so SQL injection isn't possible on the login path.
+* Add, update, and delete menu items.
+* View and manage customer orders.
+* Manage registered users.
+* View customer enquiries submitted through the contact page.
+* Monitor activity through the admin dashboard.
 
-**Separate admin area.**
-`admin_header.php`, `admin_page.php`, `admin_products.php`, `admin_orders.php`, `admin_users.php`, and `admin_contacts.php` form a dashboard restricted to accounts with `user_type = 'admin'`. This keeps store-management logic (adding products, reviewing orders, viewing contact messages) out of the customer-facing pages entirely, rather than branching UI by role on shared pages.
+## Technologies Used
 
-**All registrations default to `user_type = 'user'`.**
-Admin accounts can't be self-registered through the public form — only seeded directly in the database — so the storefront can't be used to create new admin accounts.
+The project was developed using technologies that align with the skills gained throughout the Diploma programme.
 
-## Project structure
+### Front-End
+
+* HTML5
+* CSS3
+* JavaScript
+* Font Awesome Icons
+
+### Back-End
+
+* PHP
+* MySQL
+* mysqli
+
+### Development Tools
+
+* Visual Studio Code
+* WAMP Server
+* phpMyAdmin
+* GitHub
+* InfinityFree (Web Hosting)
+
+## Why These Technologies Were Chosen
+
+PHP and MySQL were selected because they provide a simple and reliable way of developing dynamic database-driven web applications. The technologies are easy to deploy on free hosting platforms and are well suited for student projects that focus on demonstrating back-end development concepts.
+
+The project was intentionally developed without using external frameworks so that all functionality could be implemented manually. This allowed us to demonstrate our understanding of:
+
+* Authentication and session management
+* CRUD operations
+* Database design
+* Form handling and validation
+* User role management
+* Website deployment and hosting
+
+## Key Features
+
+### Guest Mode
+
+Users are able to browse the website without creating an account. Guests can:
+
+* View the homepage
+* Browse the menu
+* Read the About page
+* Contact the restaurant
+
+Guests are not allowed to:
+
+* Add products to the cart
+* Place orders
+* Access their order history
+* Access the admin dashboard
+
+This approach was chosen to improve user experience by allowing customers to explore the website before deciding to register.
+
+### User Authentication
+
+Registered users can:
+
+* Register an account
+* Log into the website securely
+* View their cart
+* Place orders
+* View previous orders
+
+Passwords are securely stored using PHP's:
+
+* `password_hash()`
+* `password_verify()`
+
+Prepared statements are also used during login to reduce the risk of SQL injection attacks.
+
+### Shopping Cart System
+
+The cart system allows users to:
+
+* Add menu items
+* Update quantities
+* Remove products
+* View order totals
+* Proceed to checkout
+
+All cart items are linked to the authenticated user's account through their `user_id`.
+
+### WhatsApp Order Confirmation
+
+After placing an order, the system:
+
+1. Stores the order in the database.
+2. Generates an order summary.
+3. Creates a WhatsApp message containing:
+
+   * Customer name
+   * Phone number
+   * Payment method
+   * Products ordered
+   * Total price
+   * Date of the order
+
+The customer is then redirected to WhatsApp where they can send the order confirmation directly to the restaurant.
+
+WhatsApp integration was selected because it is commonly used by many small businesses in South Africa and removes the need for implementing a payment gateway for this academic project.
+
+### Admin Dashboard
+
+Administrative accounts are completely separated from customer accounts.
+
+The dashboard allows administrators to:
+
+* Manage products
+* Manage customer orders
+* Manage registered users
+* View customer messages
+
+Only accounts with:
 
 ```
-DbConn.php          Single shared MySQL connection (mysqli)
-index.php            Home page (renamed from home.php for InfinityFree/Apache auto-routing)
-header.php / footer.php   Shared layout, included on every customer-facing page
-about.php, contact.php, shop.php, cart.php, checkout.php, orders.php
-login.php, register.php, logout.php, guest_home.php
-admin_header.php, admin_page.php, admin_products.php, admin_orders.php,
-admin_users.php, admin_contacts.php
-css/                 style.css (storefront), admin_style.css (dashboard)
-js/                  script.js, admin_script.js
-images/              Static site imagery
-uploaded_img/        Product images uploaded via the admin panel
-fontis_db.sql        Database schema + seed admin account
+user_type = 'admin'
 ```
 
-## Database
+can access the administrative pages.
 
-Five tables (see `fontis_db.sql`): `users`, `products`, `cart`, `orders`, `message`. Carts and orders are scoped to a logged-in `user_id`; guests can only submit contact messages (`user_id` nullable there). Foreign keys cascade/null appropriately when a user is deleted.
+Administrative accounts cannot be created through the public registration page and must be added directly through the database.
 
-## Running locally
+## Project Structure
 
-1. Serve the folder with a PHP + MySQL stack (WAMP/XAMPP/MAMP).
-2. Import `fontis_db.sql` into a local MySQL database.
-3. Point `DbConn.php` at your local database credentials.
-4. Visit `index.php`.
+```
+DbConn.php
+    Database connection file.
 
-## Deploying to InfinityFree
+index.php
+    Homepage of the website.
 
-1. Create a MySQL database via vPanel → MySQL Databases, and import `fontis_db.sql` through its phpMyAdmin.
-2. Update `DbConn.php` with the hostname, username, password, and database name shown on that same page (InfinityFree's MySQL host is never `localhost`).
-3. Upload every file *except* `.git/` and `.vscode/` into `htdocs/` via FTP.
-4. Once your domain's SSL certificate is issued, force HTTPS via `.htaccess`.
+header.php / footer.php
+    Shared website layout files.
 
-## Known limitations
+about.php
+    About Us page.
 
-- No real payment processing — `checkout.php`'s payment method field is informational, and payment is confirmed manually by an admin over WhatsApp.
-- No password reset flow.
-- Product images are uploaded manually by an admin, with no image resizing/validation beyond what the browser enforces.
+contact.php
+    Contact page.
+
+shop.php
+    Displays available menu items.
+
+cart.php
+    Handles shopping cart functionality.
+
+checkout.php
+    Handles order placement and WhatsApp integration.
+
+orders.php
+    Displays customer order history.
+
+login.php
+    User authentication page.
+
+register.php
+    User registration page.
+
+logout.php
+    Handles user logout.
+
+guest_home.php
+    Guest browsing functionality.
+
+admin_header.php
+admin_page.php
+admin_products.php
+admin_orders.php
+admin_users.php
+admin_contacts.php
+    Administrative dashboard pages.
+
+css/
+    Contains style.css and admin_style.css.
+
+js/
+    Contains JavaScript files.
+
+images/
+    Stores website images.
+
+uploaded_img/
+    Stores product images uploaded by administrators.
+
+fontis_db.sql
+    Database schema and default administrator account.
+```
+
+## Database Structure
+
+The project uses a MySQL database named:
+
+```
+fontis_db
+```
+
+The following tables are included:
+
+* users
+* products
+* cart
+* orders
+* message
+
+Each table is responsible for storing information required by the system, including customer details, menu items, shopping cart information, customer orders, and customer enquiries.
+
+## Running the Project Locally
+
+### Step 1
+
+Install and start:
+
+* WAMP Server
+
+### Step 2
+
+Extract the project folder and place it inside:
+
+```
+wamp64/www/
+```
+
+Example:
+
+```
+wamp64/www/Fontis-Fine-Dine
+```
+
+### Step 3
+
+Open phpMyAdmin and create a database named:
+
+```
+fontis_db
+```
+
+### Step 4
+
+Import the provided:
+
+```
+fontis_db.sql
+```
+
+file into the newly created database.
+
+### Step 5
+
+Ensure that the database credentials inside:
+
+```
+DbConn.php
+```
+
+match your local WAMP configuration.
+
+### Step 6
+
+Run the project by visiting:
+
+```
+http://localhost/Fontis-Fine-Dine
+```
+
+or
+
+```
+http://localhost/Fontis-Fine-Dine/index.php
+```
+
+## Deployment
+
+The project can also be deployed using InfinityFree hosting.
+
+Deployment steps include:
+
+1. Creating a MySQL database.
+2. Importing the `fontis_db.sql` file.
+3. Updating the database credentials inside `DbConn.php`.
+4. Uploading all project files into the `htdocs` directory.
+5. Configuring SSL certificates once available.
+
+## Future Improvements
+
+The following features may be added in future versions of the project:
+
+* Online payment gateway integration.
+* Order status tracking.
+* Email notifications.
+* Password recovery functionality.
+* Google Maps integration.
+* Customer reviews and ratings.
+* Mobile application integration.
+* Google Play Store deployment.
+
+## Known Limitations
+
+The current version of the project has the following limitations:
+
+* Payments are handled manually and are not processed through the website.
+* Password reset functionality has not yet been implemented.
+* Product images are uploaded manually by administrators.
+* Order status updates are currently managed manually through the admin dashboard.
+
+## Conclusion
+
+Fontis Fine Dine was developed to demonstrate practical software development skills acquired throughout the Diploma in IT Software Development. The project combines front-end development, database management, user authentication, administrative functionality, and third-party communication through WhatsApp to provide a complete restaurant ordering solution.
+
+The system showcases the implementation of real-world concepts such as CRUD operations, session management, secure password handling, database integration, and responsive web development while addressing a practical business problem.
