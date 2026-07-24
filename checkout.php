@@ -145,19 +145,19 @@ echo "<style>
     // Optionally inform user if blocked (rare)
     setTimeout(function() {
       // If after opening WhatsApp the user is still on the page, go to home after a small delay
-      window.location.href = 'home.php';
+      window.location.href = 'index.php';
     }, 2500);
   });
 
   // Handler: skip WhatsApp, go back home
   btnSkip.addEventListener('click', function() {
-    window.location.href = 'home.php';
+    window.location.href = 'index.php';
   });
 
   // Optional: allow closing modal with Escape
   document.addEventListener('keydown', function(evt) {
     if (evt.key === 'Escape') {
-      window.location.href = 'home.php';
+      window.location.href = 'index.php';
     }
   });
 })();
@@ -191,7 +191,7 @@ exit;
 
 <div class="heading">
    <h3>checkout</h3>
-   <p> <a href="home.php">home</a> / checkout </p>
+   <p> <a href="index.php">home</a> / checkout </p>
 </div>
 
 <section class="display-order">

@@ -19,7 +19,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
 <div class="heading">
    <h3>Your Orders</h3>
-   <p><a href="home.php">Home</a> / Orders</p>
+   <p><a href="index.php">Home</a> / Orders</p>
 </div>
 
 <section class="placed-orders">

@@ -101,7 +101,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
 <div class="heading">
    <h3>About Us</h3>
-   <p><a href="home.php">Home</a> / About</p>
+   <p><a href="index.php">Home</a> / About</p>
 </div>
 
 <section class="about">

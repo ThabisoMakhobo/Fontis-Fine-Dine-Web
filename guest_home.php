@@ -5,6 +5,6 @@ session_start();
 $_SESSION['guest'] = true;
 
 // Redirect to home page
-header('Location: home.php');
+header('Location: index.php');
 exit;
 ?>

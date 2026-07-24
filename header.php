@@ -34,10 +34,10 @@ if(isset($message)){
          <div class="logo">
             <img src="images/Logo-removebg-preview.png" style="height: 110px;">
          </div>
-         <a href="home.php" class="logo">Fontis Fine Dine</a>
+         <a href="index.php" class="logo">Fontis Fine Dine</a>
 
          <nav class="navbar">
-            <a href="home.php">home</a>
+            <a href="index.php">home</a>
             <a href="about.php">about</a>
             <a href="shop.php">shop</a>
             <a href="contact.php">contact</a>

@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS fontis_db;
-USE fontis_db;
+-- InfinityFree pre-creates your database (vPanel > MySQL Databases) and you
+-- import this file into it via phpMyAdmin, so no CREATE DATABASE/USE here.
 
 -- USERS TABLE
 CREATE TABLE IF NOT EXISTS users (
@@ -67,6 +67,6 @@ CREATE TABLE IF NOT EXISTS message (
 
 -- INSERT DEFAULT ADMIN USER
 INSERT INTO users (name, email, password, user_type)
-VALUES ('Admin', 'admin@gmail.com', '$2y$10$h5tnY6JxuDN5kwInKr4i0erl7gI2BHvfCpnpYPZLxSw6xNir4u5Cy', 'admin')
+VALUES ('Admin', 'admin@gmail.com', '$2y$10$eGyXxpQYczVKoVwRNoO4U.7EKZLeAL9wQnSQLiYKcb4AoUMqPRTlW', 'admin')
 ON DUPLICATE KEY UPDATE email = email;
--- Password: adminpass
+-- Password: adminpass123
