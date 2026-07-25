@@ -13,12 +13,10 @@
 
             <div class="tag">
                 <h1>Quick Link</h1>
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Featured</a>
-                <a href="#">Arrivals</a>
-                <a href="#">Reviews</a>
-                <a href="#">Blog</a>
+                <a href="index.php">Home</a>
+                <a href="about.php">About</a>
+                <a href="shop.php">Shop</a>
+                <a href="contact.php">Contact</a>
                 
             </div>
 
